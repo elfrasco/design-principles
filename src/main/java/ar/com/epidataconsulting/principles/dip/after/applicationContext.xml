@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+<!-- ****************************************************** -->						
+<!--        PERSISTENCE AND SERVICE CONFIGURATION           -->
+<!-- ****************************************************** -->
+
+	<bean id="saveProjectService" class="ar.com.epidataconsulting.principles.dip.after.SavePredictiveEngineProjectService">
+		<property name="projectDAO" ref="projectDAO" />
+		<property name="project" ref="predictiveEngine" />
+	</bean>
+						
+	<bean id="projectDAO" class="ar.com.epidataconsulting.principles.dip.after.ProjectHashMapDAO">
+		<property name="connectionManager" ref="connectionManager"/>
+		<property name="projectMapper" ref="projectMapper" />
+	</bean>
+	
+	<bean id="connectionManager" class="ar.com.epidataconsulting.principles.dip.after.ConnectionManager">
+		<property name="databaseName" value="SoftwareFactory" />
+		<property name="userName" value="guest" />
+		<property name="password" value="guest" />
+	</bean>
+	
+	<bean id="projectMapper" class="ar.com.epidataconsulting.principles.dip.after.ProjectMapper" />
+
+<!-- ****************************************************** -->
+<!--      PREDICTIVE ENGINE MOCK BUILDER CONFIGURATION      -->
+<!-- ****************************************************** -->
+	<bean id="dateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="yyyy-MM-dd" />
+	</bean>
+
+	<bean id="florenciaCastagnino" class="ar.com.epidataconsulting.principles.model2.ProjectManager">
+		<property name="name" value="Florencia" />
+		<property name="lastName" value="Castagnino" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1980-01-15" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="123" />
+	</bean>
+	
+	<bean id="adrianParedes" class="ar.com.epidataconsulting.principles.model2.Architect">
+		<property name="name" value="Adrian" />
+		<property name="lastName" value="Paredes" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1982-06-03" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="456" />
+	</bean>
+
+	<bean id="leonardoPavanello" class="ar.com.epidataconsulting.principles.model2.Developer">
+		<property name="name" value="Leonardo" />
+		<property name="lastName" value="Pavanello" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1984-05-28" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="789" />
+	</bean>
+	
+	<bean id="juanGaragorri" class="ar.com.epidataconsulting.principles.model2.Developer">
+		<property name="name" value="Juan" />
+		<property name="lastName" value="Garagorri" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1986-08-11" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="859" />
+	</bean>
+	
+	<bean id="veronicaPechersky" class="ar.com.epidataconsulting.principles.model2.Analyst">
+		<property name="name" value="Veronica" />
+		<property name="lastName" value="Pechersky" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1981-04-05" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="242" />
+	</bean>
+	
+	<bean id="ericaQuispe" class="ar.com.epidataconsulting.principles.model2.Tester">
+		<property name="name" value="Erica" />
+		<property name="lastName" value="Quispe" />
+		<property name="dateOfBirth">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="1983-09-21" />
+			</bean>
+		</property>
+		<property name="fileNumber" value="999" />
+	</bean>
+	
+	<bean id="predictiveEngine" class="ar.com.epidataconsulting.principles.model2.Project">
+		<property name="name" value="Predictive Engine" />
+		<property name="clientName" value="OSDE" />
+		<property name="durationInMonths" value="4" />
+		<property name="type" value="DEVELOPMENT" />
+		<property name="team">
+			<bean class="org.springframework.beans.factory.config.ListFactoryBean">
+				<property name="sourceList">
+					<list>
+						<ref bean="florenciaCastagnino" />
+						<ref bean="adrianParedes" />
+						<ref bean="leonardoPavanello" />
+						<ref bean="juanGaragorri" />
+						<ref bean="veronicaPechersky" />
+						<ref bean="ericaQuispe" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+</beans>
