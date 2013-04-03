@@ -1,0 +1,483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+<title>JavaScript Closures for Dummies | Developing&nbsp;thoughts —&nbsp;Morris&nbsp;Johns</title>
+
+<!-- based on saved javascript_closures_for_dummies_2 -->
+
+  
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- base href="/web/20080209105120/http://blog.morrisjohns.com/" -->
+<link rel="stylesheet" type="text/css" media="all" href="closures_files/misc_drupal.css">
+<link rel="stylesheet" type="text/css" media="all" href="closures_files/my_articles.css">
+
+<link rel="stylesheet" type="text/css" media="all" href="closures_files/style.css">
+</head>
+<body bgcolor="#ffffff"><div id="wm-ipp" style="display: block; position: relative; padding: 0px 5px; min-height: 70px; min-width: 800px; z-index: 9000;">
+
+<div class="hide"><a href="http://web.archive.org/web/20080209105120/http://blog.morrisjohns.com/javascript_closures_for_dummies#content" title="Skip navigation." accesskey="2">Skip navigation</a>.</div>
+
+<table id="content" border="0" cellpadding="15" cellspacing="0" width="100%">
+  <tbody><tr>
+     
+    <td valign="top">
+       
+      <div id="main">
+        <h1 class="title">JavaScript Closures for Dummies</h1>
+           
+         
+
+<!-- begin content -->
+
+  <div class="node">
+     
+     
+    <span class="submitted">Submitted by Morris on Tue, 2006-02-21 10:19.</span>
+     
+    <div class="content"><div class="bodyDiv">
+<div style="padding: 20px; float: right;"><img style="width: 392px; height: 320px;" src="closures_files/fordummies.jpg"></div>
+<h3 id="closure_magic">Closures Are Not Magic</h3>
+
+<p class="FirstLetterDropdown">
+This page explains closures so that a programmer can understand them - using 
+working JavaScript code. It is not for gurus nor functional programmers.
+</p>
+<p>
+Closures are <em>not hard</em> to understand once the core concept
+is grokked. However, they are impossible to understand by reading any
+academic papers or academically oriented information about them!
+</p>
+<p>This article is intended for programmers with some programming
+experience in a main-stream language, and who can read the following
+JavaScript function:<br>
+</p>
+
+
+<div id="sayhello" class="codeDiv">
+
+    function&nbsp;sayHello(name)&nbsp;{<br>
+    &nbsp;&nbsp;var&nbsp;text&nbsp;= 'Hello&nbsp;'&nbsp;+ name;<br>
+    &nbsp;&nbsp;var&nbsp;sayAlert&nbsp;= function()&nbsp;{ alert(text); }<br>
+    &nbsp;&nbsp;sayAlert();<br>
+    }<br>
+    
+    <input class="codeButton" value="sayHello('Bob');" onclick="sayHello('Bob');" type="button">
+
+    <script>
+    function sayHello(name) {
+        var text = 'Hello ' + name;
+        var sayAlert = function() { alert(text); }
+        sayAlert();
+    }
+    </script>
+    
+</div>
+<br>
+<h3 id="closure_example">An Example of a Closure</h3>
+<p class="FirstLetterDropdown">
+Two one sentence summaries:
+</p>
+<ul>
+<li>a closure is the local variables for a function - kept alive <em>after</em> the function has returned, or</li>
+<li>a closure is a stack-frame which is <em>not deallocated</em> when the function returns. (as if a 'stack-frame' were malloc'ed instead of being on the stack!)</li>
+</ul>
+<p>
+The following code returns a reference to a function:
+</p>
+
+<div class="codeDiv">
+
+    function&nbsp;sayHello2(name)&nbsp;{<br>
+    &nbsp;&nbsp;var&nbsp;text&nbsp;= 'Hello&nbsp;'&nbsp;+ name; //&nbsp;local&nbsp;variable<br>
+    &nbsp;&nbsp;var&nbsp;sayAlert&nbsp;= function()&nbsp;{ alert(text); }<br>
+    &nbsp;&nbsp;return&nbsp;sayAlert;<br>
+    }<br>
+    <input value="var say2 = sayHello2('Jane');
+say2();" id="btn2" class="codeButton" onclick="var say2 = sayHello2('Jane');say2();window['say2x'] = say2;" type="button">
+    <script>
+    // Ignore this: it just sets the text for the button: Done this way so button has two lines of text.
+    document.getElementById('btn2').value = "var say2 = sayHello2('Jane');\nsay2();" 
+    </script>
+    <script>
+    function sayHello2(name) {
+        var text = 'Hello ' + name;
+        var sayAlert = function() { alert(text); }
+        return sayAlert;
+    }
+    </script>
+</div>
+
+<p>
+Most JavaScript programmers will understand how a reference to a
+function is returned to a variable in the above code.
+If you don't, then you need to before you can learn closures. A C
+programmer would think of the function as returning a pointer to a
+function, and that the variables sayAlert and say2 were each a pointer
+to a function.
+</p>
+<p>There is a critical difference between a C pointer to a function,
+and a JavaScript reference to a function. In JavaScript, you can think
+of a function reference variable as having both a pointer to a function
+<em>as well as</em> a hidden pointer to a closure.
+</p>
+<p>
+The above code has a closure because the anonymous function <span class="codeSpan">function()&nbsp;{&nbsp;alert(text);&nbsp;}</span> is declared <em>inside</em> another function, <span class="codeSpan">sayHello2()</span> in this example.
+In JavaScript, if you use the <span class="codeSpan">function</span> keyword <em>inside</em> another function, you are creating a closure.
+</p>
+<p>
+In C, and most other common languages after a function returns, all the
+local variables are no longer accessable because the stack-frame is
+destroyed.
+</p>
+<p>
+In JavaScript, if you declare a function within another function, then the local variables can remain accessable <em>after</em> returning from the function you called.
+This is demonstrated above, because we call the function <span class="codeSpan">say2();</span> after we have returned from <span class="codeSpan">sayHello2()</span>. Notice that the code that we call references the variable <span class="codeSpan">text</span>, which was a <em>local variable</em> of the function <span class="codeSpan">sayHello2()</span>. 
+</p>
+<div class="codeDiv">
+    function()&nbsp;{&nbsp;alert(text);&nbsp;}
+    <br>
+    <input class="codeButton" value="alert(say2.toString()); // show code" onclick="if(!window['say2x']) {alert('Click the above button 1st!')} else alert(say2x.toString()); // show code" type="button">
+</div>
+<p>Click the button above to get JavaScript to print out the code for
+the anonymous function. You can see that the code refers to the
+variable <span class="codeSpan">text</span>.
+The anonymous function can reference <span class="codeSpan">text</span> which holds the value <span class="codeSpan">'Jane'</span> because the local variables of <span class="codeSpan">sayHello2()</span> are kept in a closure.<br><br>
+The magic is that in JavaScript a function reference also has a secret
+reference to the closure it was created in - similar to how delegates
+are a method pointer plus a secret reference to an object.
+</p>
+
+
+<h3 id="more_example">More examples</h3>
+<p class="FirstLetterDropdown">For some reason closures seem really
+hard to understand when you read about them, but when you see some
+examples you can click to how they work (it took me a while).<br>
+I recommend working through the examples carefully until you understand
+how they work. If you start using closures without fully understanding
+how they work, you would soon create some very wierd bugs!
+</p>
+<h4 id="Example 3">Example 3</h4>
+<p class="FirstLetterDropdown">This example shows that the local
+variables are not copied - they are kept by reference. It is kind of
+like keeping a stack-frame in memory when the outer function exits!
+</p>
+<div class="codeDiv">
+
+    function&nbsp;say667()&nbsp;{<br>
+    &nbsp;&nbsp;//&nbsp;Local&nbsp;variable&nbsp;that&nbsp;ends&nbsp;up&nbsp;within&nbsp;closure<br>
+    &nbsp;&nbsp;var&nbsp;num&nbsp;= 666;<br>
+    &nbsp;&nbsp;var&nbsp;sayAlert&nbsp;= function()&nbsp;{ alert(num); }<br>
+    &nbsp;&nbsp;num++;<br>
+    &nbsp;&nbsp;return&nbsp;sayAlert;<br>
+    }<br>
+    <input value="var sayNumba = say667();
+sayNumba();" id="btn3" class="codeButton" onclick="var sayNumba = say667();sayNumba();window['say3x'] = sayNumba;" type="button">
+    <script>
+    // Ignore this: it just sets the text for the button: Done this way so button has two lines of text.
+    document.getElementById('btn3').value = "var sayNumba = say667();\nsayNumba();" 
+    </script>
+    <br>
+    <input class="codeButton" value="alert(sayNumba.toString()); // show code" onclick="if(!window['say3x']) {alert('Click the above button 1st!')} else alert(say3x.toString());" type="button">
+    <script>
+    function say667() {
+        // Local variable that ends up within closure
+        var num = 666;
+        var sayAlert = function() { alert(num); }
+        num++;
+        return sayAlert;
+    }
+    </script>
+
+</div>
+<br>
+<h4 id="Example 4">Example 4</h4>
+<p class="FirstLetterDropdown">
+All three global functions have a common reference to the <em>same</em> closure because they are all declared within a single call to <span class="codeSpan">setupSomeGlobals()</span>.
+</p>
+<div class="codeDiv">
+
+    function&nbsp;setupSomeGlobals()&nbsp;{<br>
+    &nbsp;&nbsp;//&nbsp;Local&nbsp;variable&nbsp;that&nbsp;ends&nbsp;up&nbsp;within&nbsp;closure<br>
+    &nbsp;&nbsp;var&nbsp;num&nbsp;= 666;<br>
+    &nbsp;&nbsp;//&nbsp;Store&nbsp;some&nbsp;references&nbsp;to&nbsp;functions&nbsp;as&nbsp;global&nbsp;variables<br>
+    &nbsp;&nbsp;gAlertNumber&nbsp;= function()&nbsp;{ alert(num); }<br>
+    &nbsp;&nbsp;gIncreaseNumber&nbsp;= function()&nbsp;{ num++; }<br>
+    &nbsp;&nbsp;gSetNumber&nbsp;= function(x)&nbsp;{ num&nbsp;= x; }<br>
+    }<br>
+    <input class="codeButton" value="setupSomeGlobals();" onclick="setupSomeGlobals();document.getElementById('example4setup').style.display='';" type="button">
+    <br>
+    <div id="example4setup" style="display: none;">
+      <input class="codeButton" value="gAlertNumber();" onclick="gAlertNumber();" type="button">
+      <input class="codeButton" value="gIncreaseNumber();" onclick="gIncreaseNumber();" type="button">
+      <input class="codeButton" value="gSetNumber(5);" onclick="gSetNumber(5);" type="button">
+      <input class="codeButton" value="gSetNumber(-8888);" onclick="gSetNumber(-8888);" type="button">
+      <br>
+      <input class="codeButton" value="alert(gAlertNumber.toString()); // show code" onclick="alert(gAlertNumber.toString());" type="button"><br>
+      <input class="codeButton" value="alert(gIncreaseNumber.toString()); // show code" onclick="alert(gIncreaseNumber.toString());" type="button"><br>
+      <input class="codeButton" value="alert(gSetNumber.toString()); // show code" onclick="alert(gSetNumber.toString());" type="button"><br>
+    </div>
+    <script>
+    function setupSomeGlobals() {
+        // Local variable that ends up within closure
+        var num = 666;
+        // Store some references to functions as global variables
+        gAlertNumber = function() { alert(num); }
+        gIncreaseNumber = function() { num++; }
+        gSetNumber = function(x) { num = x; }
+    }
+    </script>
+
+</div>
+<p>
+The three functions have shared access to the same closure - the local variables of <span class="codeSpan">setupSomeGlobals()</span> when the three functions were defined.<br><br>
+Note that in the above example, if you click <span class="codeSpan">setupSomeGlobals()</span> again, then a new closure (stack-frame!) is created.
+The old <span class="codeSpan">gAlertNumber, gIncreaseNumber, gSetNumber</span> variables are overwritten with <em>new</em> functions that have the new closure.
+(In JavaScript, whenever you declare a function inside another function, the inside function(s) is/are recreated again <em>each</em> time the outside function is called.)
+</p>
+
+<h4 id="Example 5">Example 5</h4>
+<p class="FirstLetterDropdown">
+This one is a real gotcha for many people, so you need to understand it.<br>Be
+very careful if you are defining a function within a loop: the local
+variables from the closure do not act as you might first think.
+</p>
+<div class="codeDiv">
+
+    function&nbsp;buildList(list)&nbsp;{<br>
+    &nbsp;&nbsp;var&nbsp;result&nbsp;=&nbsp;[];<br>
+    &nbsp;&nbsp;for&nbsp;(var&nbsp;i&nbsp;=&nbsp;0;&nbsp;i&nbsp;&lt;&nbsp;list.length;&nbsp;i++)&nbsp;{<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;item&nbsp;=&nbsp;'item'&nbsp;+&nbsp;list[i];<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;result.push(&nbsp;function()&nbsp;{alert(item&nbsp;+&nbsp;'&nbsp;'&nbsp;+&nbsp;list[i])}&nbsp;);<br>
+    &nbsp;&nbsp;}<br>
+    &nbsp;&nbsp;return&nbsp;result;<br>
+    }<br><br>
+    function&nbsp;testList()&nbsp;{<br>
+    &nbsp;&nbsp;var&nbsp;fnlist&nbsp;=&nbsp;buildList([1,2,3]);<br>
+    &nbsp;&nbsp;//&nbsp;using&nbsp;j&nbsp;only&nbsp;to&nbsp;help&nbsp;prevent&nbsp;confusion&nbsp;-&nbsp;could&nbsp;use&nbsp;i<br>    
+&nbsp;&nbsp;for&nbsp;(var&nbsp;j&nbsp;=&nbsp;0;&nbsp;j&nbsp;&lt;&nbsp;fnlist.length;&nbsp;j++)&nbsp;{<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;fnlist[j]();<br>
+    &nbsp;&nbsp;}<br>
+    }<br>
+    <input class="codeButton" onclick="testList();" value="testList();" type="button">
+    <script>
+    function buildList(list) {
+        var result = [];
+        for (var i = 0; i < list.length; i++) {
+          var item = 'item' + list[i];
+          result.push( function() {alert(item + ' ' + list[i])} );
+        }
+        return result;
+    }
+    function testList() {
+        var fnlist = buildList([1,2,3]);
+        // using j only to help prevent confusion - could use i
+        for (var j = 0; j < fnlist.length; j++) {
+          fnlist[j]();
+        }
+    }
+    </script>
+
+</div>
+<p>
+The line <span class="codeSpan">result.push( function() {alert(item + ' ' + list[i])}</span>
+adds a reference to an anonymous function three times to the result
+array. If you are not so familiar with anonymous functions think of it
+like:
+</p>
+<div class="codeDiv">
+&nbsp;&nbsp;&nbsp;&nbsp;pointer&nbsp;=&nbsp;function()&nbsp;{alert(item&nbsp;+&nbsp;'&nbsp;'&nbsp;+&nbsp;list[i])};<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result.push(pointer);<br><br>
+</div>
+<p>Note that when you run the example, "item3 undefined" is alerted
+three times! This is because just like previous examples, there is only
+one closure for the local variables for <span class="codeSpan">buildList</span>. When the anonymous functions are called on the line <span class="codeSpan">fnlist[j]();</span> they all use the same single closure, and they use the <em>current</em> value for <span class="codeSpan">i</span> and item within that one closure (where <span class="codeSpan">i</span> has a value of <span class="codeSpan">3</span> because the loop had completed, and <span class="codeSpan">item</span> has a value of <span class="codeSpan">'item3'</span>). 
+</p>
+
+<br>
+
+<h4 id="Example 6">Example 6</h4>
+<p class="FirstLetterDropdown">
+This example shows that the closure contains any local variables that were declared inside the outer function before it exited.
+Note that the variable <span class="codeSpan">alice</span> is actually declared after the anonymous function.
+The anonymous function is declared first: and when that function is called it can access the <span class="codeSpan">alice</span> variable because <span class="codeSpan">alice</span> is in the closure.<br>
+Also <span class="codeSpan">sayAlice()();</span> just directly calls the function reference returned from <span class="codeSpan">sayAlice()</span> - it is exactly the same as what was done previously, but without the temp variable.
+</p>
+<div class="codeDiv">
+
+    function&nbsp;sayAlice()&nbsp;{<br>
+    &nbsp;&nbsp;var&nbsp;sayAlert&nbsp;= function()&nbsp;{ alert(alice); }<br>
+    &nbsp;&nbsp;//&nbsp;Local&nbsp;variable&nbsp;that&nbsp;ends&nbsp;up&nbsp;within&nbsp;closure<br>
+    &nbsp;&nbsp;var&nbsp;alice&nbsp;= 'Hello Alice';<br>
+    &nbsp;&nbsp;return&nbsp;sayAlert;<br>
+    }<br>
+    <input class="codeButton" value="sayAlice()();" onclick="sayAlice()();" type="button">
+    <br>
+    <input class="codeButton" value="alert(alice); // Note: doesnt work because alice is not a global variable" onclick="alert(alice);" type="button">
+    <script>
+    function sayAlice() {
+      var sayAlert = function() { alert(alice); }
+      // Local variable that ends up within closure
+      var alice = 'Hello Alice';
+      return sayAlert;
+    }
+    </script>
+
+</div>
+<p>
+Tricky: note also that the <span class="codeSpan">sayAlert</span> variable is also inside the closure, and could be accessed by any other function that might be declared within <span class="codeSpan">sayAlice()</span> or it could be accessed recursively within the inside function.
+</p>
+
+<h4 id="Example 7">Example 7</h4>
+<p class="FirstLetterDropdown">
+This final example shows that each call creates a separate closure for the local variables.
+There is <em>not</em> a single closure per function declaration. There is a closure for <em>each call</em> to a function.
+</p>
+<div class="codeDiv">
+
+    function&nbsp;newClosure(someNum,&nbsp;someRef)&nbsp;{<br>
+    &nbsp;&nbsp;//&nbsp;Local&nbsp;variables&nbsp;that&nbsp;end&nbsp;up&nbsp;within&nbsp;closure<br>
+    &nbsp;&nbsp;var&nbsp;num&nbsp;= someNum;<br>
+    &nbsp;&nbsp;var&nbsp;anArray&nbsp;= [1,2,3];<br>
+    &nbsp;&nbsp;var&nbsp;ref&nbsp;= someRef;<br>
+    &nbsp;&nbsp;return function(x)&nbsp;{<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;num += x;<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;anArray.push(num);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert('num:&nbsp;'&nbsp;+ num&nbsp;+ <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'\nanArray&nbsp;'&nbsp;+ anArray.toString()&nbsp;+ <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'\nref.someVar&nbsp;'&nbsp;+ ref.someVar);<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+    }<br>
+    <input value="closure1 = newClosure(40, {someVar : 'closure 1'});
+closure2 = newClosure(1000, {someVar : 'closure 2'});" id="btn6" class="codeButton" onclick="closure1 = newClosure(40, {someVar : 'closure 1'});closure2 = newClosure(1000, {someVar : 'closure 2'});document.getElementById('example6setup').style.display='';" type="button">
+    <script>
+    // Ignore this: it just sets the text for the button: Done this way so button has two lines of text.
+    document.getElementById('btn6').value = "closure1 = newClosure(40, {someVar : 'closure 1'});\nclosure2 = newClosure(1000, {someVar : 'closure 2'});" 
+    </script>
+    <br>
+    <div id="example6setup" style="display: none;">
+      <input class="codeButton" value="closure1(5);" onclick="closure1(5);" type="button">
+      <br>
+      <input class="codeButton" value="closure2(-10);" onclick="closure2(-10);" type="button">
+    </div>
+    <script>
+    function newClosure(someNum, someRef) {
+      // Local variables that end up within closure
+      var num = someNum;
+      var anArray = [1,2,3];
+      var ref = someRef;
+      return function(x) {
+          num += x;
+          anArray.push(num);
+          alert('num: ' + num + 
+               '\nanArray ' + anArray.toString() + 
+               '\nref.someVar ' + ref.someVar);
+        }
+    }
+    </script>
+
+</div>
+
+
+<h3 id="summary">Summary</h3>
+<p class="FirstLetterDropdown">
+If everything seems completely unclear then the best thing to do is to
+play with the examples. Reading an explanation is much harder than
+understanding examples.<br>
+My explanations of closures and stack-frames etc are not technically
+correct - they are gross simplifications intended to help
+understanding. Once the basic idea is grokked, you can pick up the
+details later.<br>
+<br><br>
+Final points:
+</p><ul>
+<li>Whenever you use <span class="codeSpan">function</span> inside another function, a closure is used.</li>
+<li>Whenever you use <span class="codeSpan">eval()</span> inside a
+function, a closure is used. The text you eval can reference local
+variables of the function, and within eval you can even create new
+local variables by using <span class="codeSpan">eval('var foo = </span>…</li>
+<li>When you use <span class="codeSpan">Function()</span> inside a
+function, it does not create a closure. (The new function cannot
+reference the local variables of the function calling <span class="codeSpan">Function()</span>).</li>
+<li>A closure in JavaScript is like keeping a copy of the all the local variables, just as they were when a function exited.</li>
+<li>It is probably best to think that a closure is always created just
+on entry to a function, and the local variables are added to that
+closure.</li>
+<li>A new set of local variables is kept every time a function with a
+closure is called (Given that the function contains a function
+declaration inside it, and a reference to that inside function is
+either returned or an external reference is kept for it in some way).</li>
+<li>Two functions might look like they have the same source text, but
+have completely different behaviour because of their 'hidden' closure.
+I don't think JavaScript code can actually find out if a function
+reference has a closure or not.</li>
+<li>If you are trying to do any dynamic source code modifications ( for example: <span class="codeSpan">myFunction = Function(myFunction.toString().replace(/Hello/,'Hola'));</span>
+), it won't work if myFunction is a closure (Of course, you would never
+even think of doing source code string substitution at runtime, but...).</li>
+<li>It is possible to get function declarations within function
+declarations within functions - and you can get closures at more than
+one level.</li>
+<li>I think normally a closure is the term for both the function along
+with the variables that are captured. Note that I do not use that
+definition in this article!</li>
+<li>I suspect that closures in JavaScript differ from those normally found in functional languages.</li>
+</ul>
+
+<h3 id="summary">Links</h3>
+<ul>
+<li><a href="http://web.archive.org/web/20080209105120/http://trimpath.com/project/wiki/TrimBreakpoint">TrimBreakpoint</a> is a tricky use of closures to let you inspect local variables for a function from a popup breakpoint window.</li>
+<li>Douglas Crockford's simulated <a href="http://web.archive.org/web/20080209105120/http://www.crockford.com/javascript/private.html">private attributes and private methods</a> for an object, using closures.</li>
+<li>A great explanation of how closures can <a href="http://web.archive.org/web/20080209105120/http://www.codeproject.com/jscript/LeakPatterns.asp">cause memory leaks in IE</a> if you are not careful.</li>
+</ul>
+
+<h3 id="summary">Thanks</h3>
+<p class="FirstLetterDropdown">
+If you have <em>just</em> learnt
+closures (here or elsewhere!), then I am interested in any feedback
+from you about any changes you might suggest that could make this
+article clearer. Send an email to morrisjohns.com (morris_closure @).
+Please note that I am not a guru on JavaScript - nor on closures.<br><br>
+Thanks for reading.
+</p>
+</div></div>
+     
+  </div>
+<a id="comment"></a>
+<form method="post" action="/web/20080209105120/http://blog.morrisjohns.com/comment"><div>
+<input name="edit[nid]" value="4" type="hidden">
+<a id="comment-9"></a>
+
+     
+  </div>
+</div></form>
+<!-- end content -->
+
+      </div><!-- main -->
+    </td>
+     
+  </tr>
+</tbody></table>
+
+<table id="footer-menu" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody><tr>
+    <td align="center" valign="middle">
+      <div class="primary-links"></div>
+      <div class="secondary-links"></div>
+    </td>
+  </tr>
+</tbody></table>
+
+<div id="footer-message">
+  <div style="font-size: 8pt;"><a href="http://web.archive.org/web/20080209105120/http://creativecommons.org/licenses/by-sa/1.0/"><img src="closures_files/somerights20.png" alt="Creative Commons License" height="31" hspace="7" align="left" border="0" vspace="3" width="88"></a>Unless
+otherwise labeled by its originating author, or attributed to another
+author, the content found on this site is made available under the
+terms of an Attribution/Share Alike Creative Commons <a href="http://web.archive.org/web/20080209105120/http://creativecommons.org/licenses/by-sa/1.0/">license</a>, with the exception that no rights are granted — in any logo, graphic design, trademarks or trade names.</div>
+</div>
+
+</body></html>
+<!--
+     FILE ARCHIVED ON 10:51:20 Feb 9, 2008 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 16:41:55 Apr 3, 2013.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->

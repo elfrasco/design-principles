@@ -1,0 +1,91 @@
+
+
+
+
+
+/*
+     FILE ARCHIVED ON 15:41:56 May 21, 2011 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 16:41:56 Apr 3, 2013.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+.bodyDiv {
+  font-family: EuroStile, Tahoma, Verdana, Arial, Helvetica, sans-serif;
+  letter-spacing:1px;
+}
+
+p.FirstLetterDropdown:first-letter {
+  font-style: italic;
+  font-size: 20pt;
+}
+
+.Quote {
+  font-style: italic;
+  font-size: 12pt;
+  padding: 20px;
+}
+
+.ListIntro {
+  color: #555;
+  margin-right:10px;
+  font-weight: bold;
+}
+
+.CopyrightStuff {
+  font-size: 8pt;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.codeDiv {
+  margin-left: 40px;
+  font-family: "Courier New", times, serif;
+}
+
+.codeSpan {
+  font-family: "Courier New", times, serif;
+}
+
+.codeButton {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-left: 0px;
+  text-align: left;
+  font-family: "Courier New", times, serif;
+}
+
+li {
+  margin-bottom: 6pt;
+}
+
+h1 {
+  font-variant: small-caps;
+  letter-spacing:3px;
+}
+
+h2 {
+  font-variant: small-caps;
+  letter-spacing:3px;
+}
+
+h3 {
+  margin-top:40px;
+  font-variant: small-caps;
+  letter-spacing:3px;
+  clear:left;
+}
+
+.FloaterImage {
+  margin:20px;
+  padding:7px;
+  border:1px solid #ddd;
+}
+
+.HeadingImage {
+  height: 25px;
+  border: 1px solid #ddd;
+  padding: 0px;
+  margin-right:8px;
+}
