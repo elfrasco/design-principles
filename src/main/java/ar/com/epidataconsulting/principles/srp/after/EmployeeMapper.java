@@ -1,15 +1,13 @@
-package ar.com.epidataconsulting.principles.spr.before;
+package ar.com.epidataconsulting.principles.srp.after;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import ar.com.epidataconsulting.principles.database.Connection;
-import ar.com.epidataconsulting.principles.database.Database;
 import ar.com.epidataconsulting.principles.model.Employee;
 
-public class DAOUtil {
-	
+public class EmployeeMapper {
+
 	public Map<String, Object> employeeToMap(Employee employee) {
 		Map<String, Object> employeeMap = new HashMap<String, Object>();
 		employeeMap.put("id", employee.getId());
@@ -32,15 +30,4 @@ public class DAOUtil {
 		return employee;
 	}
 
-	public Connection getConnection() {
-		Database.start();
-		Database.login("guest", "guest");
-		Connection connection = Database.getConnection(Database.SOFTWARE_FACTORY_SCHEMA_NAME);
-		return connection;
-	}
-
-	public void closeConnection(Connection connection) {
-		connection.close();
-		Database.shutdown();
-	}
 }

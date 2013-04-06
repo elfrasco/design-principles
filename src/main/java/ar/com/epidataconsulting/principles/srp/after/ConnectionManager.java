@@ -1,4 +1,4 @@
-package ar.com.epidataconsulting.principles.spr.after;
+package ar.com.epidataconsulting.principles.srp.after;
 
 import ar.com.epidataconsulting.principles.database.Connection;
 import ar.com.epidataconsulting.principles.database.Database;

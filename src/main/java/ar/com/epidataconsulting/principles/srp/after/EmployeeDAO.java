@@ -1,4 +1,4 @@
-package ar.com.epidataconsulting.principles.spr.after;
+package ar.com.epidataconsulting.principles.srp.after;
 
 import java.util.Map;
 
