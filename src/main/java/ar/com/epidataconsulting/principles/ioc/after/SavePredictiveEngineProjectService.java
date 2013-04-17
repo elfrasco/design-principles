@@ -13,7 +13,7 @@ public class SavePredictiveEngineProjectService {
 	
 	private static final String CONFIG_FILE_PATH = "src/main/java/ar/com/epidataconsulting/principles/ioc/after/applicationContext.xml";
 
-	private void save() {
+	public void save() {
 		
 		// Create the Predictive Engine Project
 		Project project = ProjectMockBuilder.createPredictiveEngine();

@@ -20,7 +20,7 @@ public class SavePredictiveEngineProjectService {
 	
 	private static final Logger logger = Logger.getLogger(SavePredictiveEngineProjectService.class);
 
-	private void save() {
+	public void save() {
 		
 		// Create the Predictive Engine Project
 		Project project = new Project();
