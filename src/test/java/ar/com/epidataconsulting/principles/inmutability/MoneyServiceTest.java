@@ -19,6 +19,8 @@ public class MoneyServiceTest {
 		MoneyService moneyService = new MoneyService();
 		Money m3 = moneyService.sum(m1, m2);
 		
+		Assert.assertEquals(new BigDecimal(20), m1.getValue());
+		Assert.assertEquals(new BigDecimal(20), m2.getValue());
 		Assert.assertEquals(new BigDecimal(40), m3.getValue());
 		Assert.assertEquals(pesos, m3.getCurrency());
 	}
